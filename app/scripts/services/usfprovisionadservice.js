@@ -42,6 +42,9 @@
           'removeAdGroupUser': {
             method: 'POST', params: {'service': 'removeAdGroupUser'},responseType: 'json', headers: { 'X-Auth-Token': tokenAuth.getStoredToken('distGroupMgr') }
           },
+          'removeAdGroupUsers': {
+            method: 'POST', params: {'service': 'removeAdGroupUsers'},responseType: 'json', headers: { 'X-Auth-Token': tokenAuth.getStoredToken('distGroupMgr') }
+          },
           'addAdGroupUser': {
             method: 'POST', params: {'service': 'addAdGroupUser'},responseType: 'json', headers: { 'X-Auth-Token': tokenAuth.getStoredToken('distGroupMgr') }
           }
@@ -63,6 +66,9 @@
         },
         removeAdGroupUser: function (group,member) {
           return distGroupMgrResource.removeAdGroupUser({group: group,member: member}).$promise;
+        },
+        removeAdGroupUsers: function (group,members) {
+          return distGroupMgrResource.removeAdGroupUsers({group: group,members: members}).$promise;
         },
         addAdGroupUser: function (group,member) {
           return distGroupMgrResource.addAdGroupUser({group: group,member: member}).$promise;

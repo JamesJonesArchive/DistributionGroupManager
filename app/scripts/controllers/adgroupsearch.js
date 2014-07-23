@@ -16,17 +16,7 @@
           $scope.error=errorMessage;
       });
       $scope.change = function(selectedGroup) {
-        //alert($scope.login);
-        //// alert("My selected group is "+JSON.stringify(selectedGroup));
-        UsfProvisionADservice.getAdGroupMembersWithDetails(selectedGroup).then(function(data){
-          $scope.members = (data.members === 0)?[]:data.members;
-          $scope.removalMembers = [];
-          // alert(JSON.stringify($scope.members));
-          $log.info($scope.members);
-          UsfProvisionADservice.setMembers($scope.members);
-        },function(errorMessage) {
-            $scope.error=errorMessage;
-        });
+        $scope.$broadcast('updateGroupMembers',selectedGroup);
       };      
       $scope.hasMembers = function() {
         return UsfProvisionADservice.hasMembers();
@@ -36,10 +26,15 @@
         angular.forEach($filter('filter')(members, {'isChecked': true}, true),function(value, key) {
           this.push(value.netid);
         },deleteMembers);
-        $window.alert(JSON.stringify({'group': group,'members': deleteMembers}));
-        // $window.alert(JSON.stringify($filter('filter')(members, {'isChecked': true}, true)));
-        
-        // $window.alert(JSON.stringify(members));  
+        UsfProvisionADservice.removeAdGroupUsers(group,deleteMembers).then(function(data) {
+          if (!data.status) {
+            
+          }
+          $log.info(data);
+          $scope.$broadcast('updateGroupMembers',group);
+        },function(errorMessage) {
+          $scope.error=errorMessage;
+        });
       };
       $scope.hasMembersCheckedForRemoval = function(members) {
         var count = 0;
@@ -49,24 +44,25 @@
         return (count > 0);
       };
       $scope.addNewMember = function(group,member) {
-        $window.alert(JSON.stringify({'group': group,'member': member}));
+        UsfProvisionADservice.addAdGroupUser(group,member).then(function(data) {
+          if (data.status) {
+            $scope.addMember = '';
+            $scope.$broadcast('updateGroupMembers',group);
+          } else {
+            $scope.error='Could not add \''+member+'\' to the distribution group \''+group+'\'.';
+          }
+        },function(errorMessage) {
+          $scope.error=errorMessage;
+        });
       };
-      $scope.formData = {
-        removalMembers: []
-      };
-      $scope.removalMembers = [];
-      $scope.toggleMemberSelection = function(member) {
-        var idx = $scope.removalMembers.indexOf(member);
-    
-        // is currently selected
-        if (idx > -1) {
-          $scope.removalMembers.splice(idx, 1);
-        }
-    
-        // is newly selected
-        else {
-          $scope.removalMembers.push(member);
-        }      
-      };
+      $scope.$on('updateGroupMembers', function(event,group) {
+        UsfProvisionADservice.getAdGroupMembersWithDetails(group).then(function(data){
+          $scope.members = (data.members === 0)?[]:data.members;
+          $log.info($scope.members);
+          UsfProvisionADservice.setMembers($scope.members);
+        },function(errorMessage) {
+          $scope.error=errorMessage;
+        });
+      }); 
     }]);
 })(window, window.angular);
