@@ -14,6 +14,7 @@
         $window.alert('Here\'s my group' + (typeof $scope.selectedGroup !== 'undefined')?'undefined':$scope.selectedGroup);
         UsfProvisionADservice.getAdGroupMembersWithDetails($scope.selectedGroup).then(function(data){
             $scope.members = (data.members === 0)?[]:data.members;
+            $scope.removalMembers = [];
             $log.info($scope.members);
             // alert(JSON.stringify($scope.members));
         },function(errorMessage) {
@@ -26,7 +27,7 @@
         // alert("Members are :" + JSON.stringify(Adservice.getMembers()));
         $scope.members = UsfProvisionADservice.getMembers();
       }); 
-      
+      $scope.removalMembers = [];
       
     }]);
 })(window, window.angular);
