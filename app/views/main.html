@@ -9,6 +9,31 @@
           </select>
         </div>
       </div>
+      <script type="text/ng-template" id="statusModalContent.html">
+        <div class="modal-header">
+          <h3 class="modal-title">{{statusModalTitle}}</h3>
+        </div>
+        <div class="modal-body">
+          <table class="table table-striped" style="border: 1px solid black;">
+            <thead>
+              <tr>
+                <th colspan="{{statusHeaders.length}}"><h3>Failed Updates</h3></th>
+              </tr>
+              <tr>
+                <th ng-repeat="header in statusHeaders">{{header}}</th>
+              </tr>
+            </thead>
+            <tbody >
+              <tr ng-repeat="log in statusLogs">
+                <td ng-repeat="header in statusHeaders" style="text-align:left">{{log[header]}}</td>
+              </tr>
+            </tbody>
+          </table>          
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-warning" ng-click="closeStatusModel()">Close</button>
+        </div>
+      </script>      
       <div class="form-group" ng-hide="!selectedGroup">
         <label class="col-sm-2 control-label" for="add_user">Add NetID</label>
         <div class="col-sm-8">

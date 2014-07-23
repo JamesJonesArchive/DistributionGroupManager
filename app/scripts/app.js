@@ -17,6 +17,7 @@
       'ngRoute',
       'ngSanitize',
       'ngTouch',
+      'ui.bootstrap',
       'UsfCAStokenAuth'
     ])
     .constant('UsfCAStokenAuthConstant',{

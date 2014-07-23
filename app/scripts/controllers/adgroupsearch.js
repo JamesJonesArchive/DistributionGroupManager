@@ -9,7 +9,7 @@
    * Controller of the distributionGroupManagerApp
    */
   angular.module('distributionGroupManagerApp')
-    .controller('AdgroupsearchCtrl',['UsfProvisionADservice','$scope','$window','$log','$filter', function (UsfProvisionADservice,$scope,$window,$log,$filter) {
+    .controller('AdgroupsearchCtrl',['UsfProvisionADservice','$scope','$rootScope','$window','$log','$filter','$modal', function (UsfProvisionADservice,$scope,$rootScope,$window,$log,$filter,$modal) {
       UsfProvisionADservice.AdGroupSearch().then(function(data){
           $scope.groups = data.groups;
       },function(errorMessage) {
@@ -28,12 +28,12 @@
         },deleteMembers);
         UsfProvisionADservice.removeAdGroupUsers(group,deleteMembers).then(function(data) {
           if (!data.status) {
-            
-          }
+            $scope.openStatusModal('Removal Errors',['status','member'],$filter('filter')(data.log, {'status': false}, true));
+          }          
           $log.info(data);
           $scope.$broadcast('updateGroupMembers',group);
         },function(errorMessage) {
-          $scope.error=errorMessage;
+          $scope.openStatusModal('Removal Errors',['status','error'],[ {'status': 'error','error': errorMessage} ]);
         });
       };
       $scope.hasMembersCheckedForRemoval = function(members) {
@@ -49,10 +49,10 @@
             $scope.addMember = '';
             $scope.$broadcast('updateGroupMembers',group);
           } else {
-            $scope.error='Could not add \''+member+'\' to the distribution group \''+group+'\'.';
+            $scope.openStatusModal('Removal Errors',['status','member'],$filter('filter')(data.log, {'status': false}, true));
           }
         },function(errorMessage) {
-          $scope.error=errorMessage;
+          $scope.openStatusModal('Removal Errors',['status','error'],[ {'status': 'error','error': errorMessage} ]);
         });
       };
       $scope.$on('updateGroupMembers', function(event,group) {
@@ -63,6 +63,19 @@
         },function(errorMessage) {
           $scope.error=errorMessage;
         });
-      }); 
+      });
+      $scope.closeStatusModel = function() {
+        $rootScope.statusModal.dismiss('cancel');
+      };
+      $scope.openStatusModal = function(title,headers,log) {
+        $rootScope.statusModalTitle = title;
+        $rootScope.statusLogs = log;
+        $rootScope.statusHeaders = headers;
+        $rootScope.statusModal = $modal.open({
+          templateUrl: 'statusModalContent.html',
+          controller: 'AdgroupsearchCtrl',
+          size: 'sm'
+        });        
+      };
     }]);
 })(window, window.angular);
