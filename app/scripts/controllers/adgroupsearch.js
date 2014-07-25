@@ -23,7 +23,7 @@
       };      
       $scope.removeMembers = function(group,members) {
         var deleteMembers = [];
-        angular.forEach($filter('filter')(members, {'isChecked': true}, true),function(value, key) {
+        angular.forEach($filter('filter')(members, {'isChecked': true}, true),function(value) {
           this.push(value.netid);
         },deleteMembers);
         UsfProvisionADservice.removeAdGroupUsers(group,deleteMembers).then(function(data) {
@@ -38,7 +38,7 @@
       };
       $scope.hasMembersCheckedForRemoval = function(members) {
         var count = 0;
-        angular.forEach($filter('filter')(members, {'isChecked': true}, true),function(value, key) {
+        angular.forEach($filter('filter')(members, {'isChecked': true}, true),function() {
           count++;
         });
         return (count > 0);

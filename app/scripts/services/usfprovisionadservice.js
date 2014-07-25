@@ -9,7 +9,7 @@
    * Factory in the distributionGroupManagerApp.
    */
   angular.module('distributionGroupManagerApp')
-    .factory('UsfProvisionADservice',['$resource','tokenAuth','$log','$rootScope','$q','$timeout', function ($resource,tokenAuth,$log,$rootScope,$q,$timeout) {
+    .factory('UsfProvisionADservice',['$resource','tokenAuth','$log','$rootScope', function ($resource,tokenAuth,$log,$rootScope) {
       // Service logic
       // ...
       var distGroupMgrResource = $resource(tokenAuth.getResourceUrl('distGroupMgr'),{},{
@@ -82,7 +82,6 @@
         setMembers: function(members) {
           this.members = members;
           $rootScope.$broadcast('handleBroadcast');
-          // $rootScope.$emit('handleBroadcast');
         },
         getMembers: function() {
           return this.members;
