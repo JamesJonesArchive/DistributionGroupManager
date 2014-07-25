@@ -47,10 +47,18 @@
         UsfProvisionADservice.addAdGroupUser(group,member).then(function(data) {
           if (data.status) {
             $scope.addMember = '';
-            $scope.$broadcast('updateGroupMembers',group);
+            $scope.displayNameORemail = '';
+            $rootScope.$broadcast('updateGroupMembers',group);
           } else {
             $scope.openStatusModal('Removal Errors',['status','member'],$filter('filter')(data.log, {'status': false}, true));
           }
+        },function(errorMessage) {
+          $scope.openStatusModal('Removal Errors',['status','error'],[ {'status': 'error','error': errorMessage} ]);
+        });
+      };
+      $scope.searchDisplayNameOREmail = function(group,displayNameORemail) {
+        UsfProvisionADservice.searchDisplayNameORemail(displayNameORemail).then(function(data) {
+          $scope.openSearchResultsModal(group,data.matches);
         },function(errorMessage) {
           $scope.openStatusModal('Removal Errors',['status','error'],[ {'status': 'error','error': errorMessage} ]);
         });
@@ -76,6 +84,27 @@
           controller: 'AdgroupsearchCtrl',
           size: 'sm'
         });        
+      };
+      $scope.openSearchResultsModal = function(group,matches) {
+        $rootScope.searchMatches = matches;
+        $rootScope.searchGroup = group;
+        $rootScope.searchResultsModal = $modal.open({
+          templateUrl: 'searchDisplayNameOREmailContent.html',
+          controller: 'AdgroupsearchCtrl',
+          size: 'lg'
+        });        
+        
+      };
+      $scope.closeSearchResultsModel = function() {
+        $rootScope.searchResultsModal.dismiss('cancel');
+      };
+      $scope.addMemberFromSearchResults = function(group,member,e) {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        $scope.closeSearchResultsModel();        
+        $scope.addNewMember(group,member);
       };
     }]);
 })(window, window.angular);

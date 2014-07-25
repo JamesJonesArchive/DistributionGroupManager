@@ -9,7 +9,7 @@
    * Factory in the distributionGroupManagerApp.
    */
   angular.module('distributionGroupManagerApp')
-    .factory('UsfProvisionADservice',['$resource','tokenAuth','$log','$rootScope', function ($resource,tokenAuth,$log,$rootScope) {
+    .factory('UsfProvisionADservice',['$resource','tokenAuth','$log','$rootScope','$q','$timeout', function ($resource,tokenAuth,$log,$rootScope,$q,$timeout) {
       // Service logic
       // ...
       var distGroupMgrResource = $resource(tokenAuth.getResourceUrl('distGroupMgr'),{},{
@@ -19,7 +19,7 @@
                 var headers = headersGetter();
                 $log.info(headers);
                 // Bail on 401 detected response without transforming it
-                if ('tokenService' in data) {
+                if ((data === null)?true:'tokenService' in data) {
                   return data;
                 }
                 var groups = [];
@@ -47,6 +47,9 @@
           },
           'addAdGroupUser': {
             method: 'POST', params: {'service': 'addAdGroupUser'},responseType: 'json', headers: { 'X-Auth-Token': tokenAuth.getStoredToken('distGroupMgr') }
+          },
+          'searchDisplayNameORemail': {
+            method: 'POST', params: {'service': 'searchDisplayNameORemail'},responseType: 'json', headers: { 'X-Auth-Token': tokenAuth.getStoredToken('distGroupMgr') }
           }
       });
   
@@ -72,6 +75,9 @@
         },
         addAdGroupUser: function (group,member) {
           return distGroupMgrResource.addAdGroupUser({group: group,member: member}).$promise;
+        },
+        searchDisplayNameORemail: function (displayNameORemail) {
+          return distGroupMgrResource.searchDisplayNameORemail({displayNameORemail: displayNameORemail}).$promise;
         },
         setMembers: function(members) {
           this.members = members;

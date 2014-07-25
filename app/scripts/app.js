@@ -24,7 +24,8 @@
       'applicationUniqueId': '7647b2d875a94093cbc99f6f2cbfda77',
       'applicationResources': {
           'distGroupMgr': 'https://dev.it.usf.edu/~james/PHP_distGroupMgr/distgroupmgr.php'
-      }
+      },
+      'unauthorizedRoute': '/unauthorized'
     })
     .config(function ($routeProvider) {
       $routeProvider
@@ -35,6 +36,10 @@
         .when('/about', {
           templateUrl: 'views/about.html',
           controller: 'AboutCtrl'
+        })
+        .when('/unauthorized', {
+          templateUrl: 'views/unauthorized.html',
+          controller: 'UnauthorizedCtrl'
         })
         .otherwise({
           redirectTo: '/'
