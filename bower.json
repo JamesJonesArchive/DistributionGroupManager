@@ -14,7 +14,7 @@
     "angular-touch": "1.2.19",
     "angular-route": "1.2.19",
     "angular-bootstrap": "~0.11.0",
-    "usfcastokenauth": "https://github.com/jamjon3/UsfCAStokenAuth.git#0.0.1-2o"
+    "usfcastokenauth": "https://github.com/jamjon3/UsfCAStokenAuth.git#0.0.1-2q"
   },
   "devDependencies": {
     "angular-mocks": "1.2.19",
