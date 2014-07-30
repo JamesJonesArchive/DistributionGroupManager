@@ -1,6 +1,11 @@
 {
   "name": "distribution-group-manager",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "description": "USF AD CORS based manager. Provides an interface for managing Distribution Group memberships in AD.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jamjon3/DistributionGroupManager.git"
+  }, 
   "dependencies": {
     "angular": "1.2.19",
     "json3": "~3.3.1",
